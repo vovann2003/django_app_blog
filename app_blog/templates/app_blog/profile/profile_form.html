@@ -1,0 +1,88 @@
+{% extends "../base.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {% trans 'Register' %}
+{% endblock %}
+
+{% block content %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <div class="container">
+    <div class="row main-form">
+      <form class="" method="post">
+      {% csrf_token %}
+
+        <div class="form-group">
+          <label for="name" class="cols-sm-2 control-label">{% trans 'Your Name' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+              {{ form.first_name|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="name" class="cols-sm-2 control-label">{% trans 'Your Surname' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+              {{ form.last_name|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="cols-sm-2 control-label">{% trans 'Your Email' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+              {{ form.email|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="username" class="cols-sm-2 control-label">{% trans 'Username' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-users fa" aria-hidden="true"></i></span>
+              {{ form.username|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="cols-sm-2 control-label">{% trans 'Password' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+              {{ form.password1|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm" class="cols-sm-2 control-label">{% trans 'Confirm Password' %}</label>
+          <div class="cols-sm-10">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+              {{ form.password2|add_class:"form-control" }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group ">  
+          <button class="btn btn-primary btn-lg btn-block login-button" type="submit">
+            {% trans 'Register' %}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

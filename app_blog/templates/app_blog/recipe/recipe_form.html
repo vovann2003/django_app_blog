@@ -1,0 +1,16 @@
+{% extends "../base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% trans 'Recipe form' %}
+{% endblock %}
+
+{% block content %}
+  <div class="recipe-section">
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">{% trans 'Submit' %}</button>
+    </form>
+  </div>
+{% endblock %}

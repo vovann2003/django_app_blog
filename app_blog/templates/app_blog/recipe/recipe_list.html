@@ -1,0 +1,130 @@
+{% extends "../base.html" %}
+{% load cache i18n static mathfilters %}
+
+{% block title %}
+    {% trans 'Recipes' %}
+{% endblock %}
+
+{% block header %}
+    <nav class="header-nav">
+        <ul class="header-list list-reset flex">
+            <li class="header-item">
+                <button type="submit" class="btn-reset">
+                    <a href="{% url 'recipe-list' %}" class="nav__link">{% trans 'Home' %}</a>
+                </button>
+            </li>
+            
+            {% if request.user.is_superuser %}
+            <li class="header-item">
+                <button type="submit" class="btn-reset">
+                    <a href="{% url 'recipe-form' %}" class="nav__link">{% trans 'Add a recipe' %}</a>
+                </button>
+            </li>
+            <li class="header-item">
+                <button type="submit" class="btn-reset">
+                    <a href="{% url 'logout' %}" class="nav__link">{% trans 'Logout' %}</a>
+                </button>
+            </li>
+            <li class="header-item">
+                <button type="submit" class="btn-reset">
+                    <a href="{% url 'register' %}" class="nav__link">{% trans 'Register' %}</a>
+                </button>
+            </li>
+
+            {% else %}
+                
+                {% if request.user.is_authenticated %}
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'popular-recipe' %}" class="nav__link" target="_blank">{% trans 'The most popular recipes' %}</a>
+                        </button>
+                    </li>
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'profile-edit' request.user.id|sub:1 %}">{{ user.profile.username }}</a>
+                        </button>
+                    </li>
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'logout' %}" class="nav__link">{% trans 'Logout' %}</a>
+                        </button>
+                    </li>
+                
+                {% else %}
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'popular-recipe' %}" class="nav__link" target="_blank">{% trans 'The most popular recipes' %}</a>
+                        </button>
+                    </li>
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'register' %}" class="nav__link">{% trans 'Register' %}</a>
+                        </button>
+                    </li>
+                    <li class="header-item">
+                        <button type="submit" class="btn-reset">
+                            <a href="{% url 'login' %}" class="nav__link">{% trans 'Login' %}</a>
+                        </button>
+                    </li>
+                {% endif %}
+            <li>
+                {% get_current_language_bidi as LANGUAGE_BIDI %}
+                {% get_current_language as LANGUAGE_CODE %}
+                <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+                    <input name="next" type="hidden" value="/">
+                    <select name="language" onchange="this.form.submit()">
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        {% for language in languages %}
+                            <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{%endif%}>
+                                {{ language.name_local }} ({{ language.code }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </li>
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}
+
+{% cache 500 tag %}
+{% block tag %}
+<ul class="tag-list list-reset flex">
+    <li class="tag-item">
+        <button class="buttons button_type_all btn-reset" data-filter="all">{% trans 'All recipes' %}</button>
+    </li>
+    {% for tag in view.get_categories %}
+        <li class="tag-item">
+            <button class="btn-reset buttons button_type_{{ tag.name }}" data-filter="{{ tag.name }}">{{ tag.name }}</button>
+        </li>
+    {% empty %}
+        <li>
+            {% trans 'The list of tags is empty' %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+{% endcache %}
+
+{% cache 500 content %}
+{% block content %}
+    
+    <ul class="recipe-list list-reset flex">
+        {% for recipe in recipe_list %}
+            <li class="recipe-item {{ recipe.heading }}">
+                <img src="{{ recipe.photo.url }}" alt="Recipe photo" width="200" class="recipe-image">
+                <div class="recipe-information">
+                    <a href="{% url 'recipe-detail' recipe.slug %}" target="_blank">{{ recipe.title }}</a>
+                    <div class="recipe-details">
+                        <span class="recipe-time"><i class="fa fa-clock-o"></i>  {{ recipe.cooking_time }}</span>
+                        <span class="recipe-serving"><i class="fa fa-cutlery"></i>  {{ recipe.serving }}</span>
+                        <span class="recipe-comments"><i class="fa fa-eye"></i>  {{ recipe.views_count }}</span>
+                        <span class="recipe-views-count"><i class="fa fa-comment-o"></i>  {{ recipe.comment_recipe.all.count }}</span>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% endcache %}
