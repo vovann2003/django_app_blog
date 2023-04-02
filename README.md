@@ -13,7 +13,7 @@
 ---
 ## Environment Setup 🚀
 
-`$ git clone https://github.com/vovann2003/django-cooking-blog.git`
+`$ git clone https://github.com/vovann2003/django_app_blog.git`
 
 `$ cd django_app_blog`
 
